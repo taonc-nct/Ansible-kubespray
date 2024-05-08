@@ -1,0 +1,2 @@
+[cenos]
+172.29.196.135 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=1
