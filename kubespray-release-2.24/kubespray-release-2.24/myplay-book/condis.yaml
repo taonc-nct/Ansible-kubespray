@@ -1,4 +1,5 @@
 ---
+# link tham khảo thêm https://serverfault.com/questions/783735/ansible-multiple-statements-with-the-same-variabless
 #Example 1
 - name: install NGINX
   host: all
@@ -44,3 +45,27 @@
     - mail:
       ....
       when: result.stdout.find('down') != -1
+
+# Example4
+- name: using items-list
+- vars:
+    userlist:
+      - user_name: user1
+        user_description: user 1
+        user_id: 2000
+      - user_name: user2
+        user_description: user 2
+        user_id: 2001
+  block:
+    - name: Create real users
+      user: name="{{item.user_name}}" comment="{{item.user_description}}" home="/home/{{item.user_name}}" shell="/bin/bash" uid="{{item.user_id}}"
+      with_items: "{{ userlist }}"
+
+    - name: Copy SSH keys
+      copy:
+        src: "keys/{{ item.user_name }}.key"
+        dest: "/home/{{ item.user_name }}/.ssh/authorized_keys"
+        owner: "{{ item.user_name }}"
+        group: "{{ item.user_name }}"
+        mode: 0600
+      with_items: "{{ userlist }}"
