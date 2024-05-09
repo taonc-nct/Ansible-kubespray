@@ -1,0 +1,17 @@
+# Example:
+- name: Print hello mesage
+  hosts: all
+  gather_facts: no
+  tasks:
+  - debug:
+      var: ansible_facts
+
+
+
+
+
+# Trong tất cả sự kiện được Ansible thu thập được lưu trữ trong một biến là: ansible_facts
+# Nếu không muốn thu thập thông tin nữa dùng biến gather_facts: no
+# Với ansible
+# command using:
+#   + ansible-playbook -i inventory/mycluster/inventory.ini myplay-book/fact.yaml

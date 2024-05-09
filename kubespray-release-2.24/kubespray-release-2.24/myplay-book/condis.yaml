@@ -1,0 +1,46 @@
+---
+#Example 1
+- name: install NGINX
+  host: all
+  task: 
+  - name: Install NGIN on Dedian
+    apt:
+      name: nginx
+      state: present
+    when: ansible_os_family == "Debian" and
+          ansible_distribution_version == "16.04"
+  - name: Install NGIN on Redhat
+    yum:
+      name: nginx
+      state: present
+    when: ansible_os_family == "RedHat" or
+          ansible_os_family == "SUSE"
+# ansible_os_family, ansible_distribution_version là biến mà ansible xây dựng sẵn
+
+#Example 2
+- name: Install Softwares
+  hosts: all
+  vars:
+    packages:
+      - name: nginx
+        required: True
+      - name: mysql
+        required: True
+      - name: apache
+        required: False
+  task:
+  - name: Install "{{ item.name }}" on Debian
+    apt:
+      name: "{{ item.name }}"
+      state: present
+    loop: "{{ packages }}"
+
+# Example3
+- name: check status
+  hosts: localhost
+  tasks:
+    - command: service http status
+      register: result
+    - mail:
+      ....
+      when: result.stdout.find('down') != -1
